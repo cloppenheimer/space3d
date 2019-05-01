@@ -201,7 +201,6 @@ class Planet extends THREE.Object3D {
 		planet.position.set (distance, 0, 0)
 		this.add(planet);
 
-		var text = new THREE.TextGeometry("Earth", parameters );
 		var loader = new THREE.FontLoader();
 
 		loader.load( 'fonts/helvetiker_regular.typeface.json', function ( font ) {
