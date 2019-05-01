@@ -3,7 +3,7 @@
 <html>
 <head>
 
-<title>Welcome to the dog park</title>
+<title>Welcome to space!</title>
 
 
 <script src="https://threejs.org/build/three.min.js"></script>
@@ -52,6 +52,7 @@ class Scene extends THREE.Object3D {
 	this.background.position.set(0, 46, 0)
 	this.add(this.background)
 
+	/*
 	// Keep our robots in a list so timer can access
 	this.dogs = []
 
@@ -107,10 +108,12 @@ class Scene extends THREE.Object3D {
 	}
 
     }
+    */
 
     /*
      * Receive timer tick, pass it to objects that need it
      */
+     /*
     tick () { 
 	for (var r of this.dogs) { 
 		r.tick() 
@@ -133,7 +136,7 @@ class Scene extends THREE.Object3D {
 
     moveForward() {
     	this.cat.position.z += this.zSpeed
-    }
+    }*/
 }
 	
 class Background extends THREE.Object3D {
@@ -367,6 +370,21 @@ class Tree extends THREE.Object3D {
 		this.add (trunk)
 
 
+	}
+}
+
+class Sun extends THREE.Object3D {
+    constructor () {
+	super()
+		
+		var texture  =  new THREE.MeshLambertMaterial({
+          		 map: new THREE.TextureLoader().load("sun.jpg")
+       		})
+
+
+		var sun = new THREE.Mesh ( new THREE.SphereGeometry (3, 32, 32), sun)
+		sun.position.set (0, 5 , 0)
+		this.add(sun);
 	}
 }
 
