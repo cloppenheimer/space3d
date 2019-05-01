@@ -200,6 +200,10 @@ class Planet extends THREE.Object3D {
 		var planet = new THREE.Mesh (new THREE.SphereGeometry (radius * scaler, 32, 32), texture)
 		planet.position.set (distance, 0, 0)
 		this.add(planet);
+
+		var text = new THREE.TextGeometry("Earth", parameters );
+		text.position.set(distance, 0, 0)
+		this.add(text)
 	}
 }
 	
