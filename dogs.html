@@ -51,7 +51,7 @@ class Scene extends THREE.Object3D {
 	this.sun.position.set(0, 0, 0)
 	this.add(this.sun)
 
-	this.earth = new Planet(10, "earth.jpg", 10)
+	this.earth = new Planet(3, "earth.jpg", 10)
 	this.add(this.earth)
 
 	/*
@@ -332,8 +332,8 @@ class Sun extends THREE.Object3D {
        		})
 
 
-		var sun = new THREE.Mesh ( new THREE.SphereGeometry (3, 32, 32), texture)
-		sun.position.set (0, 5 , 0)
+		var sun = new THREE.Mesh ( new THREE.SphereGeometry (10, 32, 32), texture)
+		sun.position.set (0, 0 , 0)
 		this.add(sun);
 	}
 }
@@ -349,7 +349,7 @@ class Planet extends THREE.Object3D {
 
 
 		var planet = new THREE.Mesh (new THREE.SphereGeometry (radius, 32, 32), texture)
-		planet.position.set (0, distance , 0)
+		planet.position.set (distance, 0, 0)
 		this.add(planet);
 	}
 }
