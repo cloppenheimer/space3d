@@ -51,6 +51,9 @@ class Scene extends THREE.Object3D {
 	this.sun.position.set(0, 0, 0)
 	this.add(this.sun)
 
+	this.earth = new Planet(10, "earth.jpg", 10)
+	this.add(earth)
+
 	/*
 	
 	// Keep our robots in a list so timer can access
@@ -320,34 +323,6 @@ class Dog extends THREE.Object3D {
 }
 
 
-
-class Tree extends THREE.Object3D {
-    constructor () {
-	super()
-		
-		var leaves  =  new THREE.MeshLambertMaterial({
-          		 map: new THREE.TextureLoader().load("tree.jpg")
-       		})
-		var bark  =  new THREE.MeshLambertMaterial({
-          		 map: new THREE.TextureLoader().load("bark.jpg")
-       		})
-
-
-
-
-		var leaves = new THREE.Mesh ( new THREE.SphereGeometry (3, 32, 32), leaves)
-		leaves.position.set (0, 5 , 0)
-		this.add(leaves);
-
-		var trunk = new THREE.Mesh (
-		new THREE.BoxGeometry (2, 10, 2), bark)
-		trunk.position.set (0, 1.5, 0)
-		this.add (trunk)
-
-
-	}
-}
-
 class Sun extends THREE.Object3D {
     constructor () {
 	super()
@@ -363,6 +338,21 @@ class Sun extends THREE.Object3D {
 	}
 }
 
+class Sun extends THREE.Object3D {
+	// takes in distance from sun, texture file name, radius
+    constructor (distance, texture_img, radius) {
+	super()
+		
+		var texture  =  new THREE.MeshLambertMaterial({
+          	map: new THREE.TextureLoader().load(texture_img)
+       	})
+
+
+		var planet = new THREE.Mesh (new THREE.SphereGeometry (radius, 32, 32), texture)
+		planet.position.set (0, distance , 0)
+		this.add(planet);
+	}
+}
 
 
 
