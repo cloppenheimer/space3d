@@ -143,47 +143,22 @@ class Scene extends THREE.Object3D {
 class Background extends THREE.Object3D {
 	constructor () {
 	super()
-	/*var material = new THREE.MeshBasicMaterial({
-    		color: 0xffffff,
-    		vertexColors: THREE.FaceColors
-  		});
-
-  		var geometry = new THREE.BoxGeometry(200, 100, 100);
-
-	  // colors
-	  var green = new THREE.Color(0x66CC00);
-	  var blue = new THREE.Color(0x66b2ff);
-	  
-	  for (var i = 0; i < geometry.faces.length; i++) {
-	  	if (i == 6 || i == 7)
-	  		geometry.faces[i].color = green
-	  	else
-	  		geometry.faces[i].color = blue;
-	  }*/
-		
-	var sky =  new THREE.MeshLambertMaterial({
-           map: new THREE.TextureLoader().load("sky.jpg")
-       })
-	var grass =  new THREE.MeshLambertMaterial({
-           map: new THREE.TextureLoader().load("grass.jpg")
+	var space =  new THREE.MeshLambertMaterial({
+           map: new THREE.TextureLoader().load("space.jpg")
        })
 	
 	var materials = []
 	for (var i = 0; i < 6; i++) {
-	  	materials[i] = sky
+	  	materials[i] = space
 		materials[i].side = THREE.BackSide
 	}
-	materials[3] = grass
-	materials[3].side = THREE.BackSide
-	//materials[7] = grass
 		
-		var geometry = new THREE.BoxGeometry(200, 100, 100, 1, 1, 1, materials)
-		var back = new THREE.Mesh (geometry, materials)
-		//materials.side = THREE.BackSide;
-		back.position.set (0, 0, 0)
-		this.add(back)
+	var geometry = new THREE.BoxGeometry(400, 400, 400, 1, 1, 1, materials)
+	var back = new THREE.Mesh (geometry, materials)
+	//materials.side = THREE.BackSide;
+	back.position.set (0, 0, 0)
+	this.add(back)
 	}
-
 }
 
 	
