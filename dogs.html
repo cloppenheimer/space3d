@@ -20,11 +20,14 @@
 var myScene
 
 // divide planets radius by this
-var scaler = .0001
+var scaler = .001
 
 // sun, mercury, venus, earth, mars, jupiter, saturn, uranus, neptune
-var radii = [696000, 2,440, 6,052, 6,371, 3,390, 69,911, 58,232, 25,362, 24,622]
-var distances = []
+// radii in km, distance is average distance from sun in AU
+var radii = [696000, 2440, 6052, 6371, 3390, 69911, 58232, 25362, 24622]
+var distances_au = [0, 0.387, .722, 1, 1.52, 5.20, 9.58, 19.2, 30.1]
+// might need distance in millions of km
+var distances = [0, 57, 108, 150, 228, 779, 1430, 2880, 4500]
 
 function makeSceneGraph () {
 	myScene = new Scene()
