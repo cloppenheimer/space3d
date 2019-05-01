@@ -19,7 +19,12 @@
 // Global var for animation
 var myScene
 
+// divide planets radius by this
+var scaler = .0001
 
+// sun, mercury, venus, earth, mars, jupiter, saturn, uranus, neptune
+var radii = [696000, 2,440, 6,052, 6,371, 3,390, 69,911, 58,232, 25,362, 24,622]
+var distances = []
 
 function makeSceneGraph () {
 	myScene = new Scene()
@@ -51,8 +56,9 @@ class Scene extends THREE.Object3D {
 	this.sun.position.set(0, 0, 0)
 	this.add(this.sun)
 
-	this.earth = new Planet(10, "earth.jpg", 3)
+	this.earth = new Planet(200, "earth.jpg", radii[1])
 	this.add(this.earth)
+
 
 	/*
 	
@@ -172,8 +178,8 @@ class Sun extends THREE.Object3D {
        		})
 
 
-		var sun = new THREE.Mesh ( new THREE.SphereGeometry (10, 32, 32), texture)
-		sun.position.set (0, 0 , 0)
+		var sun = new THREE.Mesh ( new THREE.SphereGeometry (radii[0] * scaler, 32, 32), texture)
+		sun.position.set (0, 0, 0)
 		this.add(sun);
 	}
 }
@@ -188,7 +194,7 @@ class Planet extends THREE.Object3D {
        	})
 
 
-		var planet = new THREE.Mesh (new THREE.SphereGeometry (radius, 32, 32), texture)
+		var planet = new THREE.Mesh (new THREE.SphereGeometry (radius * scaler, 32, 32), texture)
 		planet.position.set (distance, 0, 0)
 		this.add(planet);
 	}
