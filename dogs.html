@@ -41,16 +41,15 @@ animate = function () {
 
 class Scene extends THREE.Object3D {
     constructor () {
-	super()
-	
-	var xPos
-	var zPos
-	var dogRotation
-	
+	super()	
 	
 	this.background = new Background()
 	this.background.position.set(0, 46, 0)
 	this.add(this.background)
+
+	this.sun = new Sun()
+	this.sun.position.set(0, 0, 0)
+	this.add(this.sun)
 
 
 	/*
@@ -120,7 +119,7 @@ class Scene extends THREE.Object3D {
 		r.tick() 
 		this.cat.tick()
 	}*/
-	render(); 
+		render(); 
     }
 
     /*moveLeft() {
