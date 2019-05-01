@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+
+<title>Welcome to the dog park</title>
+
+
+<script src="https://threejs.org/build/three.min.js"></script>
+<script src="https://threejs.org/examples/js/Detector.js"></script>
+<script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
+<script src="https://threejs.org/examples/js/loaders/OBJLoader.js"></script>
+
+<script src="boiler.js"></script>
+<script src="lights.js"></script>
+
+<script type="text/javascript">
+
+// Global var for animation
+var myScene
+
+
+
+function makeSceneGraph () {
+	myScene = new Scene()
+	scene.add (myScene)
+	lights = new Lights()
+
+	// Other initialization: when the mouse moves, call our function
+	document.addEventListener ("mousedown", onDocumentMouseDown, false)
+	document.addEventListener("keydown", onDocumentKeyDown, false);
+
+}
+
+// This will override the one in boiler.js
+animate = function () { 
+	requestAnimationFrame( animate ); 
+	myScene.tick() 
+	controls.update()
+}
+
+class Scene extends THREE.Object3D {
+    constructor () {
+	super()
+	
+	var xPos
+	var zPos
+	var dogRotation
+	
+	
+	this.background = new Background()
+	this.background.position.set(0, 46, 0)
+	this.add(this.background)
+
+	// Keep our robots in a list so timer can access
+	this.dogs = []
+
+	// First robot, position = WC origin to robot local origin
+	this.dogs[0] = new Dog ()
+	this.dogs[0].position.set (-7, -5, 2)
+	this.dogs[0].rotateY(120 * Math.PI/180)
+	this.add (this.dogs[0])
+
+	// A second robot, different local origin
+	this.dogs[1] = new Dog ()
+	this.dogs[1].position.set (-15, -5, 1)
+	this.dogs[1].rotateY(90 * Math.PI/180)
+	this.add (this.dogs[1])
+	    
+	this.dogs[2] = new Dog ()
+	this.dogs[2].position.set (5, -5, 3)
+	this.dogs[2].rotateY(100 * Math.PI/180)
+	this.add (this.dogs[2])
+	
+	for (var i = 2; i < 20; i++) {
+		this.dogs[i] = new Dog()
+		xPos = Math.floor(Math.random()*95) + 1; 
+		xPos *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
+		zPos = Math.floor(Math.random()*45) + 1; 
+		zPos *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
+		this.dogs[i].position.set (xPos, -5, zPos)
+		dogRotation= Math.floor(Math.random()* 360) + 1; 
+		this.dogs[i].rotation.set (0, dogRotation * Math.PI/180, 0)
+		this.add (this.dogs[i])
+	}
+	    
+	this.cat = new Cat ()
+	this.cat.position.set(0, -5, 3)
+	this.cat.rotateY(90 * Math.PI/180)
+	this.add(this.cat)
+
+	this.xSpeed = 1
+	this.zSpeed = 1
+
+	// add a tree
+	this.trees = []
+	var xPos
+	var zPos
+	for (var i = 0; i < 25; i++) {
+		this.trees[i] = new Tree()
+		xPos = Math.floor(Math.random()*95) + 1; 
+		xPos *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
+		zPos = Math.floor(Math.random()*45) + 1; 
+		zPos *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
+		this.trees[i].position.set(xPos, 0, zPos)
+		this.add(this.trees[i])
+	}
+
+    }
+
+    /*
+     * Receive timer tick, pass it to objects that need it
+     */
+    tick () { 
+	for (var r of this.dogs) { 
+		r.tick() 
+		this.cat.tick()
+	}
+	render(); 
+    }
+
+    moveLeft() {
+    	this.cat.position.x -= this.xSpeed
+    }
+
+    moveRight() {
+    	this.cat.position.x += this.xSpeed
+    }
+
+    moveBack() {
+    	this.cat.position.z -= this.zSpeed
+    }
+
+    moveForward() {
+    	this.cat.position.z += this.zSpeed
+    }
+}
+	
+class Background extends THREE.Object3D {
+	constructor () {
+	super()
+	/*var material = new THREE.MeshBasicMaterial({
+    		color: 0xffffff,
+    		vertexColors: THREE.FaceColors
+  		});
+
+  		var geometry = new THREE.BoxGeometry(200, 100, 100);
+
+	  // colors
+	  var green = new THREE.Color(0x66CC00);
+	  var blue = new THREE.Color(0x66b2ff);
+	  
+	  for (var i = 0; i < geometry.faces.length; i++) {
+	  	if (i == 6 || i == 7)
+	  		geometry.faces[i].color = green
+	  	else
+	  		geometry.faces[i].color = blue;
+	  }*/
+		
+	var sky =  new THREE.MeshLambertMaterial({
+           map: new THREE.TextureLoader().load("sky.jpg")
+       })
+	var grass =  new THREE.MeshLambertMaterial({
+           map: new THREE.TextureLoader().load("grass.jpg")
+       })
+	
+	var materials = []
+	for (var i = 0; i < 6; i++) {
+	  	materials[i] = sky
+		materials[i].side = THREE.BackSide
+	}
+	materials[3] = grass
+	materials[3].side = THREE.BackSide
+	//materials[7] = grass
+		
+		var geometry = new THREE.BoxGeometry(200, 100, 100, 1, 1, 1, materials)
+		var back = new THREE.Mesh (geometry, materials)
+		//materials.side = THREE.BackSide;
+		back.position.set (0, 0, 0)
+		this.add(back)
+	}
+
+}
+
+	
+	
+/*
+ * We make a Robot out of other library objects
+ */
+class Dog extends THREE.Object3D {
+    constructor () {
+	super()
+
+	/*
+         * Initialize some Materials we will be using
+	 */
+	var pants = new THREE.MeshLambertMaterial ({ color: 0x994c00 })
+	
+	var texture = new THREE.TextureLoader().load("dalmation.jpg")
+	//var shirt = new THREE.MeshLambertMaterial ({ color: 0x994c00 })
+	var fur = new THREE.MeshLambertMaterial ({map: texture, overdraw: 0.5 })
+
+	
+	//var fur = new THREE.MeshLambertMaterial ({ color: 0x994c00, shininess: 60 })
+	var eyeball = new THREE.MeshLambertMaterial ({ color: 0xffffff })
+	var mouth = new THREE.MeshLambertMaterial ({ color: 0xff3333 })
+
+
+
+	// The legss
+	var leg1 = new THREE.Mesh (
+		new THREE.CylinderGeometry (.15, .15, 2.5, 32, 32, false), fur)
+	leg1.position.set (-1.5, 1.0 + 2.5/2.0, -.75)
+	this.add (leg1)
+
+	var leg2 = new THREE.Mesh (
+		new THREE.CylinderGeometry (.15, .15, 2.5, 32, 32, false), fur)
+	leg2.position.set (1.5, 1.0 + 2.5/2.0, -.75)
+	this.add (leg2)
+
+	var leg3 = new THREE.Mesh (
+		new THREE.CylinderGeometry (.15, .15, 2.5, 32, 32, false), fur)
+	leg3.position.set (-1.5, 1.0 + 2.5/2.0, 0.75)
+	this.add (leg3)
+
+	var leg4 = new THREE.Mesh (
+		new THREE.CylinderGeometry (.15, .15, 2.5, 32, 32, false), fur)
+	leg4.position.set (1.5, 1.0 + 2.5/2.0, 0.75)
+	this.add (leg4)
+
+	/*
+	 * Upper body
+	 */
+	// First make root node for the rest of the upper body,
+	// and then work from its local origin
+	var upperbody = new THREE.Object3D ()
+	upperbody.position.set (0, 0 + 2.5, 0)
+	this.add (upperbody)
+
+	// Trunk
+	var trunk = new THREE.Mesh (
+		new THREE.BoxGeometry (4, 1.5, 2), fur)
+	trunk.position.set (0, 1.5, 0)
+	upperbody.add (trunk)
+
+
+	this.headMove = new THREE.Object3D () 
+	upperbody.add (this.headMove) 
+
+	// Head
+	var head = new THREE.Mesh (
+		new THREE.SphereGeometry (1, 32, 32), fur)
+	head.position.set (-2.2, 2 + 1/2., 0)
+	//this.headMove.add (head) 
+	upperbody.add(head);
+
+	var eye1 = new THREE.Mesh (
+		new THREE.SphereGeometry (0.2, 32, 32), eyeball)
+	eye1.position.set (-3, 2 + 1/2., -0.3)
+	upperbody.add(eye1);
+
+	var eye2 = new THREE.Mesh (
+		new THREE.SphereGeometry (0.2, 32, 32), eyeball)
+	eye2.position.set (-3, 2 + 1/2., 0.3)
+	upperbody.add(eye2);
+
+	var mouth = new THREE.Mesh (
+		new THREE.BoxGeometry (0.2, 0.5, 1), mouth)
+	mouth.position.set (-2.8, 2, 0)
+	upperbody.add (mouth)
+
+	var ear1 = new THREE.Mesh (
+		new THREE.BoxGeometry (0.2, 1, 0.5), fur)
+	ear1.position.set (-2.5, 2.5, 1)
+	upperbody.add (ear1)
+
+	var ear2 = new THREE.Mesh (
+		new THREE.BoxGeometry (0.2, 1, 0.5), fur)
+	ear2.position.set (-2.5, 2.5, -1)
+	upperbody.add (ear2)
+
+
+	// Right tailObj: first we insert a transform node, from upperbody
+	// local origin of tailObj, so the rotation will happen at the
+	// right point
+	var tailTrans = new THREE.Object3D ()
+	tailTrans.position.set (-1.25, 1, 0)
+	tailTrans.rotateX(10);
+	//tailTrans.rotateY(180);
+	//tailTrans.rotateZ(180);
+	upperbody.add (tailTrans) 
+
+	// Animation for right tailObj: again, insert transform and remember it
+	// Must also remember current direction (+1 for increasing, -1 for decreasing)
+	// we stash that in the userData field in scene graph node
+	this.tailMove = new THREE.Object3D () 
+	this.tailMove.userData = 1 // Our own data field 
+	tailTrans.add (this.tailMove) 
+
+	// Right tailObj itself
+	var tail = new tailObj (fur, fur)
+	this.tailMove.add (tail) 
+
+	
+    }
+
+    /*
+     * Received whenever timer tick's,
+     * we should update everything we need in scene graph,
+     * redraw is automatic.
+     */
+    tick () { 
+	
+   	var a = this.headMove.rotation.y 
+	a += (2 * Math.PI) / (9*60) 
+	if (a > 2*Math.PI) { 
+		a -= 2 * Math.PI 
+	}
+	this.headMove.rotation.set (0, a, 0)
+	/*
+	 * Right tailObj:
+	 * rotates about (local) X axis,
+	 * oscillates back and forth from -50 to +50 degrees,
+	 * 5 seconds (5*60 ticks) total for the 100 (ie 2*50) degree travel.
+	 * Must also remember current direction (increasing/decreasing).
+	 */
+	/*a = this.tailMove.rotation.x 
+	a += (this.tailMove.userData * 2*50 * Math.PI/180) / (1*60) 
+	if (Math.abs(a) > 20 * Math.PI/180) { 
+		this.tailMove.userData *= -1; 
+	}
+	this.tailMove.rotation.set (a, 0, 0) */
+
+	a = this.tailMove.rotation.x
+	a += (this.tailMove.userData * 2*50 * Math.PI/180) / (1*60) 
+	if (Math.abs(a) > 20 * Math.PI/180) { 
+		this.tailMove.userData *= -1; 
+	}
+	this.tailMove.rotation.set (a, 0, 0) 
+
+    }
+}
+
+
+
+class Tree extends THREE.Object3D {
+    constructor () {
+	super()
+		
+		var leaves  =  new THREE.MeshLambertMaterial({
+          		 map: new THREE.TextureLoader().load("tree.jpg")
+       		})
+		var bark  =  new THREE.MeshLambertMaterial({
+          		 map: new THREE.TextureLoader().load("bark.jpg")
+       		})
+
+
+
+
+		var leaves = new THREE.Mesh ( new THREE.SphereGeometry (3, 32, 32), leaves)
+		leaves.position.set (0, 5 , 0)
+		this.add(leaves);
+
+		var trunk = new THREE.Mesh (
+		new THREE.BoxGeometry (2, 10, 2), bark)
+		trunk.position.set (0, 1.5, 0)
+		this.add (trunk)
+
+
+	}
+}
+
+
+
+
+	class Cat extends THREE.Object3D {
+	    constructor () {
+		super()
+
+		/*
+	         * Initialize some Materials we will be using
+		 */
+		var pants = new THREE.MeshLambertMaterial ({ color: 0x994c00 })
+		//var shirt = new THREE.MeshLambertMaterial ({ color: 0x994c00 })
+		
+		var texture = new THREE.TextureLoader().load("cat.jpeg")
+		var fur = new THREE.MeshLambertMaterial ({map: texture, overdraw: 0.5 })
+
+		//var skin = new THREE.MeshLambertMaterial ({ color: 0x994c00, shininess: 60 })
+		var eyeball = new THREE.MeshLambertMaterial ({ color: 0xffffff })
+		var mouth = new THREE.MeshLambertMaterial ({ color: 0xff3333 })
+
+
+
+		// The legss
+		var leg1 = new THREE.Mesh (
+			new THREE.CylinderGeometry (.15, .15, 2.5, 32, 32, false), fur)
+		leg1.position.set (-1.5, 1.0 + 2.5/2.0, -.75)
+		this.add (leg1)
+
+		var leg2 = new THREE.Mesh (
+			new THREE.CylinderGeometry (.15, .15, 2.5, 32, 32, false), fur)
+		leg2.position.set (1.5, 1.0 + 2.5/2.0, -.75)
+		this.add (leg2)
+
+		var leg3 = new THREE.Mesh (
+			new THREE.CylinderGeometry (.15, .15, 2.5, 32, 32, false), fur)
+		leg3.position.set (-1.5, 1.0 + 2.5/2.0, 0.75)
+		this.add (leg3)
+
+		var leg4 = new THREE.Mesh (
+			new THREE.CylinderGeometry (.15, .15, 2.5, 32, 32, false), fur)
+		leg4.position.set (1.5, 1.0 + 2.5/2.0, 0.75)
+		this.add (leg4)
+
+		/*
+		 * Upper body
+		 */
+		// First make root node for the rest of the upper body,
+		// and then work from its local origin
+		var upperbody = new THREE.Object3D ()
+		upperbody.position.set (0, 0 + 2.5, 0)
+		this.add (upperbody)
+
+		// Trunk
+		var trunk = new THREE.Mesh (
+			new THREE.BoxGeometry (4, 1.5, 2), fur)
+		trunk.position.set (0, 1.5, 0)
+		upperbody.add (trunk)
+
+
+		this.headMove = new THREE.Object3D () 
+		upperbody.add (this.headMove) 
+
+		// Head
+		var head = new THREE.Mesh (
+			new THREE.SphereGeometry (1, 32, 32), fur)
+		head.position.set (-2.2, 2 + 1/2., 0)
+		//this.headMove.add (head) 
+		upperbody.add(head);
+
+		var eye1 = new THREE.Mesh (
+			new THREE.SphereGeometry (0.2, 32, 32), eyeball)
+		eye1.position.set (-3, 2 + 1/2., -0.3)
+		upperbody.add(eye1);
+
+		var eye2 = new THREE.Mesh (
+			new THREE.SphereGeometry (0.2, 32, 32), eyeball)
+		eye2.position.set (-3, 2 + 1/2., 0.3)
+		upperbody.add(eye2);
+
+		var mouth = new THREE.Mesh (
+			new THREE.BoxGeometry (0.2, 0.5, 1), mouth)
+		mouth.position.set (-2.8, 2, 0)
+		upperbody.add (mouth)
+
+		var ear1 = new THREE.Mesh (
+			new THREE.BoxGeometry (0.2, 1, 0.5), fur)
+		ear1.position.set (-2.5, 3, 1)
+		ear1.rotateX(10)
+		upperbody.add (ear1)
+
+		var ear2 = new THREE.Mesh (
+			new THREE.BoxGeometry (0.2, 1, 0.5), fur)
+		ear2.position.set (-2.5, 3, -1)
+		ear2.rotateX(100)
+		upperbody.add (ear2)
+
+
+		// Right tailObj: first we insert a transform node, from upperbody
+		// local origin of tailObj, so the rotation will happen at the
+		// right point
+		var tailTrans = new THREE.Object3D ()
+		tailTrans.position.set (-1.25, 3, 0)
+		//tailTrans.rotateY(180);
+		//tailTrans.rotateZ(180);
+		upperbody.add (tailTrans) 
+
+		// Animation for right tailObj: again, insert transform and remember it
+		// Must also remember current direction (+1 for increasing, -1 for decreasing)
+		// we stash that in the userData field in scene graph node
+		this.tailMove = new THREE.Object3D () 
+		this.tailMove.userData = 1 // Our own data field 
+		tailTrans.add (this.tailMove) 
+
+		// Right tailObj itself
+		var tail = new tailObj (fur, fur)
+		this.tailMove.add (tail) 
+
+		
+	    }
+
+	    /*
+	     * Received whenever timer tick's,
+	     * we should update everything we need in scene graph,
+	     * redraw is automatic.
+	     */
+	    tick () { 
+		
+	   	var a = this.headMove.rotation.y 
+		a += (2 * Math.PI) / (9*60) 
+		if (a > 2*Math.PI) { 
+			a -= 2 * Math.PI 
+		}
+		this.headMove.rotation.set (0, a, 0)
+
+
+		a = this.tailMove.rotation.x
+		a += (this.tailMove.userData * 2*50 * Math.PI/180) / (1*60) 
+		if (Math.abs(a) > 20 * Math.PI/180) { 
+			this.tailMove.userData *= -1; 
+		}
+		this.tailMove.rotation.set (a, 0, 0) 
+
+	    }
+}
+
+
+/*
+ * Separate object that makes the Arm + Hand assembly
+ */
+class tailObj extends THREE.Object3D {
+    constructor (shirt, skin) {
+	super()
+
+	// Arm
+	var tail = new THREE.Mesh (
+		new THREE.BoxGeometry (0.25, 2.5, 0.5), shirt)
+	tail.position.set (3.32, -2.2, 0)
+	this.add (tail)
+
+
+    }
+}
+
+function onDocumentKeyDown(event) {
+	console.log("hi")
+    var keyCode = event.which;
+    if (keyCode == 38) {
+    	myScene.moveBack()
+    } else if (keyCode == 40) {
+       myScene.moveForward()
+    } else if (keyCode == 37) {
+       myScene.moveLeft()
+    } else if (keyCode == 39) {
+       myScene.moveRight()
+    } 
+    else {
+    	console.log("hey")
+    }
+    render()
+};
+
+
+/*
+ * Handle mouse picking
+ */
+function onDocumentMouseDown (event) { 
+	// Take mouse coords, flip y, convert to (-1..+1)
+	// Also note in HTML: <body style="margin: 0px">
+	var mouse = { 
+		x: ( event.clientX / window.innerWidth ) * 2 - 1, 
+		y: - ( event.clientY / window.innerHeight ) * 2 + 1 } 
+
+	// Set up for picking
+	var raycaster = new THREE.Raycaster () 
+	raycaster.setFromCamera (mouse, camera) 
+
+	// Returns array of all objects in scene with which the ray intersects
+	var intersects = raycaster.intersectObjects (scene.children, true); 
+	
+	// If there were any intersections, take the first (ie nearest)
+	if (intersects.length > 0) { 
+		//intersects[0].object.material = 
+			//new THREE.MeshPhongMaterial ({ color: 0xff0000 })
+		render()
+	}
+}
+
+</script>
+</head>
+
+<body style="margin: 0px">
+<!-- Container for three.js -->
+<div id="theContainer"></div>
+</body>
+</html>
+
+
+
+
+
+
+
