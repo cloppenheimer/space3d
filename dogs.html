@@ -52,6 +52,7 @@ class Scene extends THREE.Object3D {
 	this.background.position.set(0, 46, 0)
 	this.add(this.background)
 
+
 	/*
 	// Keep our robots in a list so timer can access
 	this.dogs = []
@@ -113,16 +114,16 @@ class Scene extends THREE.Object3D {
     /*
      * Receive timer tick, pass it to objects that need it
      */
-     /*
+     
     tick () { 
-	for (var r of this.dogs) { 
+	/*for (var r of this.dogs) { 
 		r.tick() 
 		this.cat.tick()
-	}
+	}*/
 	render(); 
     }
 
-    moveLeft() {
+    /*moveLeft() {
     	this.cat.position.x -= this.xSpeed
     }
 
