@@ -51,7 +51,7 @@ class Scene extends THREE.Object3D {
 	this.sun.position.set(0, 0, 0)
 	this.add(this.sun)
 
-	this.earth = new Planet(3, "earth.jpg", 10)
+	this.earth = new Planet(10, "earth.jpg", 3)
 	this.add(this.earth)
 
 	/*
@@ -163,6 +163,36 @@ class Background extends THREE.Object3D {
 	}
 }
 
+class Sun extends THREE.Object3D {
+    constructor () {
+	super()
+		
+		var texture  =  new THREE.MeshLambertMaterial({
+          		 map: new THREE.TextureLoader().load("sun.jpg")
+       		})
+
+
+		var sun = new THREE.Mesh ( new THREE.SphereGeometry (10, 32, 32), texture)
+		sun.position.set (0, 0 , 0)
+		this.add(sun);
+	}
+}
+
+class Planet extends THREE.Object3D {
+	// takes in distance from sun, texture file name, radius
+    constructor (distance, texture_img, radius) {
+	super()
+		
+		var texture  =  new THREE.MeshLambertMaterial({
+          	map: new THREE.TextureLoader().load(texture_img)
+       	})
+
+
+		var planet = new THREE.Mesh (new THREE.SphereGeometry (radius, 32, 32), texture)
+		planet.position.set (distance, 0, 0)
+		this.add(planet);
+	}
+}
 	
 	
 /*
@@ -323,36 +353,7 @@ class Dog extends THREE.Object3D {
 }
 
 
-class Sun extends THREE.Object3D {
-    constructor () {
-	super()
-		
-		var texture  =  new THREE.MeshLambertMaterial({
-          		 map: new THREE.TextureLoader().load("sun.jpg")
-       		})
 
-
-		var sun = new THREE.Mesh ( new THREE.SphereGeometry (10, 32, 32), texture)
-		sun.position.set (0, 0 , 0)
-		this.add(sun);
-	}
-}
-
-class Planet extends THREE.Object3D {
-	// takes in distance from sun, texture file name, radius
-    constructor (distance, texture_img, radius) {
-	super()
-		
-		var texture  =  new THREE.MeshLambertMaterial({
-          	map: new THREE.TextureLoader().load(texture_img)
-       	})
-
-
-		var planet = new THREE.Mesh (new THREE.SphereGeometry (radius, 32, 32), texture)
-		planet.position.set (distance, 0, 0)
-		this.add(planet);
-	}
-}
 
 
 
