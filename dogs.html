@@ -52,7 +52,7 @@ class Scene extends THREE.Object3D {
 	this.add(this.sun)
 
 	this.earth = new Planet(10, "earth.jpg", 10)
-	this.add(earth)
+	this.add(this.earth)
 
 	/*
 	
@@ -338,7 +338,7 @@ class Sun extends THREE.Object3D {
 	}
 }
 
-class Sun extends THREE.Object3D {
+class Planet extends THREE.Object3D {
 	// takes in distance from sun, texture file name, radius
     constructor (distance, texture_img, radius) {
 	super()
