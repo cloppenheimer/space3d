@@ -353,11 +353,11 @@ class Sun extends THREE.Object3D {
 	super()
 		
 		var texture  =  new THREE.MeshLambertMaterial({
-          		 map: new THREE.TextureLoader().load("tree.jpg")
+          		 map: new THREE.TextureLoader().load("sun.jpg")
        		})
 
 
-		var sun = new THREE.Mesh ( new THREE.SphereGeometry (3, 32, 32), sun)
+		var sun = new THREE.Mesh ( new THREE.SphereGeometry (3, 32, 32), texture)
 		sun.position.set (0, 5 , 0)
 		this.add(sun);
 	}
