@@ -36,6 +36,12 @@ function makeSceneGraph () {
 	scene.add (myScene)
 	lights = new Lights()
 
+	var loader = new THREE.TextureLoader();
+loader.load('space.jpg' , function(texture)
+            {
+             scene.background = texture;  
+            });
+
 	// Other initialization: when the mouse moves, call our function
 	document.addEventListener ("mousedown", onDocumentMouseDown, false)
 	document.addEventListener("keydown", onDocumentKeyDown, false);
@@ -53,9 +59,9 @@ class Scene extends THREE.Object3D {
     constructor () {
 	super()	
 	
-	this.background = new Background()
+	/*this.background = new Background()
 	this.background.position.set(0, 0, 0)
-	this.add(this.background)
+	this.add(this.background)*/
 
 	/*this.sun = new Sun()
 	this.sun.position.set(0, 0, 0)
