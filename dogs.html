@@ -29,7 +29,7 @@ var radii = [696000, 2440, 6052, 6371, 3390, 69911, 58232, 25362, 24622]
 var distances_au = [0, 0.387, .722, 1, 1.52, 5.20, 9.58, 19.2, 30.1]
 // might need distance in millions of km
 var distances = [0, 57, 108, 150, 228, 779, 1430, 2880, 4500]
-var images = []
+var images = ["sun.jpg", "mercury.jpg", "venus.jpg", "earth.jpg", "mars.jpg", "jupiter.jpg", "saturn.jpg", "uranus.jpg", "neptune.jpg"]
 
 function makeSceneGraph () {
 	myScene = new Scene()
@@ -57,12 +57,19 @@ class Scene extends THREE.Object3D {
 	this.background.position.set(0, 0, 0)
 	//this.add(this.background)
 
-	this.sun = new Sun()
+	/*this.sun = new Sun()
 	this.sun.position.set(0, 0, 0)
-	this.add(this.sun)
+	this.add(this.sun)*/
 
-	this.earth = new Planet(distances[3], "earth.jpg", radii[3])
-	this.add(this.earth)
+
+	for (var i = 1; i < 9; i++) {
+		this.curr_planet = new Planet(i)
+		this.add(this.curr_planet);
+	}
+
+	//this.earth = new Planet(distances[3], "earth.jpg", radii[3])
+	//this.add(this.earth)
+
 
 
 	/*
@@ -191,20 +198,21 @@ class Sun extends THREE.Object3D {
 
 class Planet extends THREE.Object3D {
 	// takes in distance from sun, texture file name, radius
-    constructor (distance, texture_img, radius) {
+    constructor (index) {
 	super()
-		distance = distance * dist_scaler
+		var distance = distances[index] * dist_scaler
+		var radius = radii[index] * scaler
 		
 		var texture  =  new THREE.MeshLambertMaterial({
-          	map: new THREE.TextureLoader().load(texture_img)
+          	map: new THREE.TextureLoader().load(images[index])
        	})
 
 
-		var planet = new THREE.Mesh (new THREE.SphereGeometry (radius * scaler, 32, 32), texture)
+		var planet = new THREE.Mesh (new THREE.SphereGeometry (radius, 32, 32), texture)
 		planet.position.set (distance, 0, 0)
 		this.add(planet);
 
-		var orbit = new THREE.RingGeometry(distance, distance + 1, 32, 32);
+		var orbit = new THREE.RingGeometry(distance - 0.1, distance + 0.1, 32, 32);
 		var material = new THREE.MeshBasicMaterial({ color: 0xffff00, side: THREE.DoubleSide } );
 		var mesh = new THREE.Mesh(orbit, material );
 		mesh.position.set(0, 0, 0)
