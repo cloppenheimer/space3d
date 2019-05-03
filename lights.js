@@ -27,8 +27,8 @@ class Lights {
 
     this.ambientLight = new THREE.AmbientLight (0x404040)
 	scene.add (this.ambientLight);
-	
-    this.sunlight = new THREE.PointLight( 0xff0000, 1, 100 );
+
+    this.sunlight = new THREE.PointLight( 0xfffff, 1, 100 );
 	this.sunlight.position.set( 0, 0, 0);
 	scene.add(this.sunlight );
 	}
