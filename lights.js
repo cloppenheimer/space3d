@@ -25,9 +25,9 @@ class Lights {
 	scene.add (this.ambientLight);
     }*/
 
-    var sunlight = new THREE.PointLight( 0xff0000, 1, 100 );
-	sunlight.position.set( 0, 0, 0);
-	scene.add( sunlight );
+    this.sunlight = new THREE.PointLight( 0xff0000, 1, 100 );
+	this.sunlight.position.set( 0, 0, 0);
+	scene.add(this.sunlight );
 
     // Callback from checkboxes
     pressed (state, light) {
