@@ -164,7 +164,7 @@ class Scene extends THREE.Object3D {
 class Background extends THREE.Object3D {
 	constructor () {
 	super()
-	/*var space =  new THREE.MeshLambertMaterial({
+	var space =  new THREE.MeshLambertMaterial({
            map: new THREE.TextureLoader().load("space.jpg")
        })
 	
@@ -174,14 +174,14 @@ class Background extends THREE.Object3D {
 		materials[i].side = THREE.BackSide
 	}
 		
-	var geometry = new THREE.BoxGeometry(2000, 2000, 2000, 1, 1, 1, materials)
+	var geometry = new THREE.BoxGeometry(1000, 1000, 1000, 1, 1, 1, materials)
 	var back = new THREE.Mesh (geometry, materials)
 	//materials.side = THREE.BackSide;
 	back.position.set (0, 0, 0)
-	this.add(back)*/
+	this.add(back)
 
 // Load the background texture
-        var texture = THREE.ImageUtils.loadTexture( 'space.jpg' );
+       /* var texture = THREE.ImageUtils.loadTexture( 'space.jpg' );
         var backgroundMesh = new THREE.Mesh(
             new THREE.PlaneGeometry(2048, 2048, 0),
             new THREE.MeshBasicMaterial({
@@ -191,7 +191,7 @@ class Background extends THREE.Object3D {
         backgroundMesh .material.depthTest = false;
         backgroundMesh .material.depthWrite = false;
 
-        this.add(backgroundMesh)
+        this.add(backgroundMesh)*/
         // Create your background scene
        // var backgroundScene = new THREE.Scene();
       //  var backgroundCamera = new THREE.Camera();
