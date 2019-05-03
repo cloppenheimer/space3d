@@ -29,6 +29,7 @@ var radii = [696000, 2440, 6052, 6371, 3390, 69911, 58232, 25362, 24622]
 var distances_au = [0, 0.387, .722, 1, 1.52, 5.20, 9.58, 19.2, 30.1]
 // might need distance in millions of km
 var distances = [0, 57, 108, 150, 228, 779, 1430, 2880, 4500]
+var images = []
 
 function makeSceneGraph () {
 	myScene = new Scene()
@@ -56,11 +57,11 @@ class Scene extends THREE.Object3D {
 	this.background.position.set(0, 0, 0)
 	//this.add(this.background)
 
-	/*this.sun = new Sun()
+	this.sun = new Sun()
 	this.sun.position.set(0, 0, 0)
-	this.add(this.sun)*/
+	this.add(this.sun)
 
-	this.earth = new Planet(distances[3], "earth.jpg", 200)
+	this.earth = new Planet(distances[3], "earth.jpg", radii[3])
 	this.add(this.earth)
 
 
@@ -178,8 +179,8 @@ class Sun extends THREE.Object3D {
 	super()
 		
 		var texture  =  new THREE.MeshLambertMaterial({
-          		 map: new THREE.TextureLoader().load("sun.jpg")
-       		})
+          	map: new THREE.TextureLoader().load("sun.jpg")
+       	})
 
 
 		var sun = new THREE.Mesh ( new THREE.SphereGeometry (radii[0] * scaler, 32, 32), texture)
