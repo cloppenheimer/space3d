@@ -20,7 +20,8 @@
 var myScene
 
 // divide planets radius by this
-var scaler = .0001
+var scaler = 0.0001
+var dist_scaler = 0.1
 
 // sun, mercury, venus, earth, mars, jupiter, saturn, uranus, neptune
 // radii in km, distance is average distance from sun in AU
@@ -52,14 +53,14 @@ class Scene extends THREE.Object3D {
 	super()	
 	
 	this.background = new Background()
-	this.background.position.set(0, 46, 0)
+	this.background.position.set(0, 0, 0)
 	//this.add(this.background)
 
-	this.sun = new Sun()
+	/*this.sun = new Sun()
 	this.sun.position.set(0, 0, 0)
-	this.add(this.sun)
+	this.add(this.sun)*/
 
-	this.earth = new Planet(300, "earth.jpg", 20)
+	this.earth = new Planet(distances[3], "earth.jpg", 20)
 	this.add(this.earth)
 
 
@@ -191,6 +192,7 @@ class Planet extends THREE.Object3D {
 	// takes in distance from sun, texture file name, radius
     constructor (distance, texture_img, radius) {
 	super()
+		distance = distance * dist_scaler
 		
 		var texture  =  new THREE.MeshLambertMaterial({
           	map: new THREE.TextureLoader().load(texture_img)
@@ -201,7 +203,13 @@ class Planet extends THREE.Object3D {
 		planet.position.set (distance, 0, 0)
 		this.add(planet);
 
-		var loader = new THREE.FontLoader();
+		var orbit = new THREE.RingGeometry(distance, distance + 1, 32, 32);
+		var material = new THREE.MeshBasicMaterial({ color: 0xffff00, side: THREE.DoubleSide } );
+		var mesh = new THREE.Mesh(orbit, material );
+		mesh.position.set(0, 0, 0)
+		scene.add( mesh );
+
+		/*var loader = new THREE.FontLoader();
 
 		loader.load( 'fonts/helvetiker_regular.typeface.json', function ( font ) {
 			var text = new THREE.TextGeometry( 'Earth', {
@@ -217,7 +225,7 @@ class Planet extends THREE.Object3D {
 			} );
 			text.position.set(distance, 0, 0)
 			this.add(text)
-		} );
+		} );*/
 
 		
 	}
