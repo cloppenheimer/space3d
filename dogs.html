@@ -36,11 +36,6 @@ function makeSceneGraph () {
 	scene.add (myScene)
 	lights = new Lights()
 
-	var loader = new THREE.TextureLoader();
-loader.load('space.jpg' , function(texture)
-            {
-             scene.background = texture;  
-            });
 
 	// Other initialization: when the mouse moves, call our function
 	document.addEventListener ("mousedown", onDocumentMouseDown, false)
@@ -59,9 +54,9 @@ class Scene extends THREE.Object3D {
     constructor () {
 	super()	
 	
-	/*this.background = new Background()
+	this.background = new Background()
 	this.background.position.set(0, 0, 0)
-	this.add(this.background)*/
+	this.add(this.background)
 
 	/*this.sun = new Sun()
 	this.sun.position.set(0, 0, 0)
@@ -169,7 +164,7 @@ class Scene extends THREE.Object3D {
 class Background extends THREE.Object3D {
 	constructor () {
 	super()
-	var space =  new THREE.MeshLambertMaterial({
+	/*var space =  new THREE.MeshLambertMaterial({
            map: new THREE.TextureLoader().load("space.jpg")
        })
 	
@@ -183,7 +178,26 @@ class Background extends THREE.Object3D {
 	var back = new THREE.Mesh (geometry, materials)
 	//materials.side = THREE.BackSide;
 	back.position.set (0, 0, 0)
-	this.add(back)
+	this.add(back)*/
+
+// Load the background texture
+        var texture = THREE.ImageUtils.loadTexture( 'space.jpg' );
+        var backgroundMesh = new THREE.Mesh(
+            new THREE.PlaneGeometry(2048, 2048, 0),
+            new THREE.MeshBasicMaterial({
+                map: texture
+            }));
+
+        backgroundMesh .material.depthTest = false;
+        backgroundMesh .material.depthWrite = false;
+
+        this.add(backgroundMesh)
+        // Create your background scene
+       // var backgroundScene = new THREE.Scene();
+      //  var backgroundCamera = new THREE.Camera();
+       // backgroundScene .add(backgroundCamera );
+      //  backgroundScene .add(backgroundMesh );
+
 	}
 }
 
