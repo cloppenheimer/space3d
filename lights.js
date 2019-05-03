@@ -10,7 +10,7 @@ class Lights {
 
 	// Main (key) light, directional, 
 	// from 45 deg. user's right, above, bright white
-	this.mainLight = new THREE.DirectionalLight ("white", 1)
+	/*this.mainLight = new THREE.DirectionalLight ("white", 1)
 	this.mainLight.position.set (1, 0.5, 1)
 	scene.add (this.mainLight)
 
@@ -23,7 +23,11 @@ class Lights {
 	// Ambient light, white, still less bright
 	this.ambientLight = new THREE.AmbientLight (0x404040)
 	scene.add (this.ambientLight);
-    }
+    }*/
+
+    var sunlight = new THREE.PointLight( 0xff0000, 1, 100 );
+	sunlight.position.set( 0, 0, 0);
+	scene.add( light );
 
     // Callback from checkboxes
     pressed (state, light) {
