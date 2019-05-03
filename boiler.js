@@ -10,7 +10,7 @@ window.onload = function () {
 	console.log("updated!!!")
 	// Most browsers now support WebGLRenderer
 	renderer = new THREE.WebGLRenderer( { antialias: true } );
-	renderer.setClearColor( new THREE.Color ("lightgrey"))
+	//renderer.setClearColor( new THREE.Color ("lightgrey"))
 	renderer.setSize( window.innerWidth, window.innerHeight );
 	document.getElementById('theContainer').appendChild(renderer.domElement);
 

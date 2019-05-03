@@ -173,7 +173,7 @@ class Background extends THREE.Object3D {
 		materials[i].side = THREE.BackSide
 	}
 		
-	var geometry = new THREE.BoxGeometry(1000, 1000, 1000, 1, 1, 1, materials)
+	var geometry = new THREE.BoxGeometry(2000, 2000, 2000, 1, 1, 1, materials)
 	var back = new THREE.Mesh (geometry, materials)
 	//materials.side = THREE.BackSide;
 	back.position.set (0, 0, 0)
@@ -213,30 +213,10 @@ class Planet extends THREE.Object3D {
 		this.add(planet);
 
 		var orbit = new THREE.RingGeometry(distance - 0.1, distance + 0.1, 32, 32);
-		var material = new THREE.MeshBasicMaterial({ color: 0xffff00, side: THREE.DoubleSide } );
+		var material = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide } );
 		var mesh = new THREE.Mesh(orbit, material );
 		mesh.position.set(0, 0, 0)
 		scene.add( mesh );
-
-		/*var loader = new THREE.FontLoader();
-
-		loader.load( 'fonts/helvetiker_regular.typeface.json', function ( font ) {
-			var text = new THREE.TextGeometry( 'Earth', {
-				font: font,
-				size: 80,
-				height: 5,
-				curveSegments: 12,
-				bevelEnabled: true,
-				bevelThickness: 10,
-				bevelSize: 8,
-				bevelOffset: 0,
-				bevelSegments: 5
-			} );
-			text.position.set(distance, 0, 0)
-			this.add(text)
-		} );*/
-
-		
 	}
 }
 	
