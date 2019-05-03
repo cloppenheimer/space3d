@@ -1,18 +1,11 @@
-/*
- * All the boilerplate from the first example is here,
- * you just provide makeSceneGraph()
- */
-
-// Global variables
+//Set up and load scene
+ 
 var scene, renderer, camera, controls;
 
 window.onload = function () { 
-	console.log("updated!!!")
-	// Most browsers now support WebGLRenderer
 	renderer = new THREE.WebGLRenderer( { antialias: true } );
-	//renderer.setClearColor( new THREE.Color ("lightgrey"))
 	renderer.setSize( window.innerWidth, window.innerHeight );
-	document.getElementById('theContainer').appendChild(renderer.domElement);
+	document.getElementById('space').appendChild(renderer.domElement);
 
 	// Create the scene
 	scene = new THREE.Scene();
@@ -26,18 +19,12 @@ window.onload = function () {
 	controls = new THREE.OrbitControls( camera, renderer.domElement );
 	controls.addEventListener( 'change', render );
 
-	// Add our stuff to the scene, kept in a separate function
-	makeSceneGraph()
+	// Add space stuff to the scene, kept in a separate function
+	goToSpace()
 
 	render()
-	animate()
 }
 
-// Animation loop
-function animate() {
-	requestAnimationFrame( animate );
-	controls.update()
-}
 
 // Render the scene
 function render() {

@@ -1,4 +1,3 @@
-# Dog diorama
+# 3D Solar System Model
 
-A virtual diorama full of dogs created using three.js. View at https://cloppenheimer.github.io/dogs3D/dogs.html
-
+View at https://cloppenheimer.github.io/space3d
